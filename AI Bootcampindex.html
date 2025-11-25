@@ -1,0 +1,1226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Bootcamp Tracker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+        
+        .tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: 600;
+            color: #666;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab:hover {
+            background: #e8e9ea;
+        }
+        
+        .tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+            background: white;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 30px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 32px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .setup-section {
+            background: #f0f7ff;
+            border-left: 4px solid #2196f3;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+        }
+        
+        .setup-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1976d2;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .resource-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .resource-card {
+            background: white;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 3px solid #667eea;
+        }
+        
+        .resource-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .resource-link {
+            color: #667eea;
+            text-decoration: none;
+            font-size: 13px;
+            word-break: break-all;
+        }
+        
+        .resource-link:hover {
+            text-decoration: underline;
+        }
+        
+        .resource-desc {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .guide-section {
+            margin-bottom: 30px;
+        }
+        
+        .guide-section h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+        
+        .guide-section h4 {
+            color: #333;
+            margin: 20px 0 10px 0;
+            font-size: 16px;
+        }
+        
+        .guide-section p, .guide-section ul {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        
+        .guide-section ul {
+            margin-left: 20px;
+        }
+        
+        .guide-section li {
+            margin-bottom: 8px;
+        }
+        
+        .highlight-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+        
+        .month-section {
+            margin-bottom: 40px;
+        }
+        
+        .month-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .month-title {
+            font-size: 20px;
+            font-weight: 600;
+        }
+        
+        .month-progress {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .week-card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .week-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .week-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .week-hours {
+            background: #667eea;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .week-resources {
+            background: #e3f2fd;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+        }
+        
+        .week-resources-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: #1976d2;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+        
+        .week-resources a {
+            display: block;
+            color: #1976d2;
+            text-decoration: none;
+            font-size: 13px;
+            margin-bottom: 5px;
+            padding: 4px 0;
+        }
+        
+        .week-resources a:hover {
+            text-decoration: underline;
+        }
+        
+        .task-list {
+            list-style: none;
+        }
+        
+        .task-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 10px;
+            margin-bottom: 8px;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .task-item:hover {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .task-item.completed {
+            opacity: 0.6;
+            background: #e8f5e9;
+        }
+        
+        .task-checkbox {
+            width: 20px;
+            height: 20px;
+            min-width: 20px;
+            border: 2px solid #667eea;
+            border-radius: 4px;
+            margin-right: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            cursor: pointer;
+        }
+        
+        .task-item.completed .task-checkbox {
+            background: #667eea;
+            border-color: #667eea;
+        }
+        
+        .task-checkbox::after {
+            content: '✓';
+            color: white;
+            font-size: 14px;
+            display: none;
+        }
+        
+        .task-item.completed .task-checkbox::after {
+            display: block;
+        }
+        
+        .task-text {
+            flex: 1;
+            font-size: 14px;
+            color: #333;
+            line-height: 1.5;
+        }
+        
+        .task-item.completed .task-text {
+            text-decoration: line-through;
+            color: #666;
+        }
+        
+        .deliverable {
+            background: #fff3e0;
+            border-left: 4px solid #ff9800;
+            padding: 12px;
+            margin-top: 10px;
+            border-radius: 4px;
+        }
+        
+        .deliverable-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: #ff9800;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .deliverable-text {
+            font-size: 13px;
+            color: #555;
+        }
+        
+        .notes-section {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        .notes-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        .notes-input {
+            width: 100%;
+            min-height: 60px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 13px;
+            font-family: inherit;
+            resize: vertical;
+        }
+        
+        .notes-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            padding: 20px 30px;
+            background: #f8f9fa;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #5568d3;
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+        
+        .btn-secondary:hover {
+            background: #f0f0f0;
+        }
+        
+        @media (max-width: 768px) {
+            .stats {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .week-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .resource-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .tabs {
+                overflow-x: auto;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 3-Month AI Bootcamp Tracker</h1>
+            <p>Data Governance & AI Program Management • 60 Hours Total • Zero Installation Required</p>
+        </div>
+        
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('tracker')">📊 Progress Tracker</div>
+            <div class="tab" onclick="switchTab('setup')">🎯 Getting Started</div>
+            <div class="tab" onclick="switchTab('resources')">🔗 All Resources</div>
+        </div>
+        
+        <div id="tracker" class="tab-content active">
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalProgress">0%</div>
+                    <div class="stat-label">Overall Progress</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="hoursCompleted">0</div>
+                    <div class="stat-label">Hours Completed</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="tasksCompleted">0/132</div>
+                    <div class="stat-label">Tasks Done</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="deliverables">0/12</div>
+                    <div class="stat-label">Deliverables</div>
+                </div>
+            </div>
+            
+            <div class="content" id="trackerContent"></div>
+        </div>
+        
+        <div id="setup" class="tab-content">
+            <div class="content">
+                <div class="setup-section">
+                    <div class="setup-title">⚡ Quick Start: No Installation Needed!</div>
+                    <p style="margin-bottom: 15px;">Good news: You can start immediately using only your web browser. No coding, no complex setup, just create free accounts and begin learning.</p>
+                    
+                    <div class="resource-grid">
+                        <div class="resource-card">
+                            <div class="resource-name">1️⃣ Claude (You're here!)</div>
+                            <a href="https://claude.ai" class="resource-link" target="_blank">claude.ai</a>
+                            <div class="resource-desc">Already using it! Best for analysis, writing, and file uploads</div>
+                        </div>
+                        <div class="resource-card">
+                            <div class="resource-name">2️⃣ ChatGPT</div>
+                            <a href="https://chat.openai.com" class="resource-link" target="_blank">chat.openai.com</a>
+                            <div class="resource-desc">Free tier with GPT-4o mini. Great for quick tasks</div>
+                        </div>
+                        <div class="resource-card">
+                            <div class="resource-name">3️⃣ Microsoft Copilot Studio</div>
+                            <a href="https://copilotstudio.microsoft.com" class="resource-link" target="_blank">copilotstudio.microsoft.com</a>
+                            <div class="resource-desc">Build agents with no code. Essential for Week 2</div>
+                        </div>
+                        <div class="resource-card">
+                            <div class="resource-name">4️⃣ Google Gemini</div>
+                            <a href="https://gemini.google.com" class="resource-link" target="_blank">gemini.google.com</a>
+                            <div class="resource-desc">Free alternative, good for research</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="guide-section">
+                    <h3>🎯 Your First Week Action Plan</h3>
+                    
+                    <h4>Day 1: Setup (30 min)</h4>
+                    <ul>
+                        <li>Create accounts for Claude, ChatGPT, and Microsoft Copilot</li>
+                        <li>Have a conversation with each - ask about your work challenges</li>
+                        <li>Notice the differences in their responses</li>
+                    </ul>
+                    
+                    <h4>Day 2: Practice Prompting (30 min)</h4>
+                    <ul>
+                        <li>Ask for help with a real work task in data governance</li>
+                        <li>Try different ways of phrasing the same question</li>
+                        <li>Save the prompts that give you the best results</li>
+                    </ul>
+                    
+                    <h4>Day 3: Explore Tools (30 min)</h4>
+                    <ul>
+                        <li>Log into Microsoft Copilot Studio</li>
+                        <li>Browse example agents and templates</li>
+                        <li>Watch a quick tutorial video</li>
+                    </ul>
+                    
+                    <h4>Day 4: Build Something Small (30 min)</h4>
+                    <ul>
+                        <li>Create your first simple agent in Copilot Studio</li>
+                        <li>Or compile 5 useful prompts for your daily work</li>
+                        <li>Test and refine them</li>
+                    </ul>
+                    
+                    <h4>Day 5: Document & Reflect (30 min)</h4>
+                    <ul>
+                        <li>Write down what you learned this week</li>
+                        <li>List 3 specific ways AI could help your work</li>
+                        <li>Optional: Post on LinkedIn about your first week learning AI</li>
+                    </ul>
+                </div>
+                
+                <div class="highlight-box">
+                    <strong>💡 Key Insight:</strong> You don't need to install Python, OpenAI, or any coding tools for this bootcamp. Everything runs in your browser. Only consider installation if you later want to build custom applications with code.
+                </div>
+                
+                <div class="guide-section">
+                    <h3>🚫 What You DON'T Need</h3>
+                    <ul>
+                        <li>❌ Python installation (unless you want to code later)</li>
+                        <li>❌ OpenAI API keys or payment info (use free web interfaces)</li>
+                        <li>❌ Programming experience</li>
+                        <li>❌ Expensive paid subscriptions</li>
+                        <li>❌ Complex development environments</li>
+                    </ul>
+                </div>
+                
+                <div class="guide-section">
+                    <h3>📱 Additional Free Tools (Set up as needed)</h3>
+                    <div class="resource-grid">
+                        <div class="resource-card">
+                            <div class="resource-name">Canva</div>
+                            <a href="https://www.canva.com" class="resource-link" target="_blank">canva.com</a>
+                            <div class="resource-desc">Design guides, presentations. Needed in Month 3</div>
+                        </div>
+                        <div class="resource-card">
+                            <div class="resource-name">Notion</div>
+                            <a href="https://www.notion.so" class="resource-link" target="_blank">notion.so</a>
+                            <div class="resource-desc">Portfolio and documentation. Alternative: Google Sites</div>
+                        </div>
+                        <div class="resource-card">
+                            <div class="resource-name">Zapier</div>
+                            <a href="https://zapier.com" class="resource-link" target="_blank">zapier.com</a>
+                            <div class="resource-desc">Workflow automation. Needed in Month 2</div>
+                        </div>
+                        <div class="resource-card">
+                            <div class="resource-name">Make.com</div>
+                            <a href="https://www.make.com" class="resource-link" target="_blank">make.com</a>
+                            <div class="resource-desc">Alternative to Zapier, more visual</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="resources" class="tab-content">
+            <div class="content">
+                <div class="guide-section">
+                    <h3>📚 Complete Resource Library</h3>
+                    <p>All resources are free. Click links to access courses, tools, and documentation.</p>
+                </div>
+                
+                <div class="setup-section">
+                    <div class="setup-title">🎓 Month 1: Core Learning Resources</div>
+                    <div class="resource-grid">
+                        <div class="resource-card">
+                            <div class="resource-name">DeepLearning.AI Prompt Engineering</div>
+                            <a href="https://www.deeplearning.ai/short-courses/chatgpt-prompt-engineering-for-developers/" class="resource-link" target="_blank">Course Link</a>
+                            <div class="resource-desc">1-hour course, perfect for Week 1</div>
+                        </div>
+                        <div class="resource-card">
+                            <div class="resource-name">Anthropic Prompt Guide</div>
+                            <a href="https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering" class="resource-link" target="_blank">Documentation</a>
+                            <div class="resource-desc">Official Claude prompting techniques</div>
+                        </div>
+                        <div class="resource-card">
+                            <div class="resource-name">OpenAI Prompt Engineering</div>
+                            <a href="https://platform.openai.com/docs/guides/prompt-engineering" class="resource-link" target="_blank">Guide</a>
+                            <div class="resource-desc">ChatGPT best practices</div>
+                        </div>
+                        <div class="resource-card">
+                            <div class="resource-name">Microsoft Copilot Studio Docs</div>
+                            <a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio" class="resource-link" target="_blank">Documentation</a>
+                            <div class="resource-desc">Build agents without code</div>
+                        </div>
+                        <div class="resource-card">
+                            <div class="resource-name">NIST AI Risk Framework</div>
+                            <a href="https://www.nist.gov/itl/ai-risk-management-framework" class="resource-link" target="_blank">Free PDF</a>
+                            <div class="resource-desc">Essential for Week 3 governance work</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="setup-section">
+                    <div class="setup-title">🔬 Month 2: Technical Deep Dive</div>
+                    <div class="resource-grid">
+                        <div class="resource-card">
+                            <div class="resource-name">3Blue1Brown Neural Networks</div>
+                            <a href="https://www.3blue1brown.com/lessons/neural-networks" class="resource-link" target="_blank">Video Series</a>
+                            <div class="resource-desc">Beautiful visual explanations</div>
+                        </div>
+                        <div class="resource-card">
+                            <div class="resource-name">Andrej Karpathy - Intro to LLMs</div>
+                            <a href="https://www.youtube.com/watch?v=zjkBMFhNj_g" class="resource-link" target="_blank">YouTube</a>
+                            <div class="resource-desc">1-hour comprehensive intro</div>
+                        </div>
+                        <div class="resource-card">
+                            <div class="resource-name">The Illustrated Transformer</div>
+                            <a href="https://jalammar.github.io/illustrated-transformer/" class="resource-link" target="_blank">Blog Post</a>
+                            <div class="resource-desc">Understand how LLMs work visually</div>
+                        </div>
+                        <div class="resource-card">
+                            <div class="resource-name">Vector Databases Course</div>
+                            <a href="https://www.deeplearning.ai/short-courses/building-applications-vector-databases/" class="resource-link" target="_blank">DeepLearning.AI</a>
+                            <div class="resource-desc">Learn about RAG systems</div>
+                        </div>
+                        <div class="resource-card">
+                            <div class="resource-name">OpenAI Fine-tuning Guide</div>
+                            <a href="https://platform.openai.com/docs/guides/fine-tuning" class="resource-link" target="_blank">Documentation</a>
+                            <div class="resource-desc">When and how to fine-tune models</div>
+                        </div>
+                        <div class="resource-card">
+                            <div class="resource-name">Microsoft AI Principles</div>
+                            <a href="https://www.microsoft.com/en-us/ai/responsible-ai" class="resource-link" target="_blank">Resource</a>
+                            <div class="resource-desc">Study real governance frameworks</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="setup-section">
+                    <div class="setup-title">🚀 Month 3: Building & Publishing</div>
+                    <div class="resource-grid">
+                        <div class="resource-card">
+                            <div class="resource-name">Canva Design Tool</div>
+                            <a href="https://www.canva.com" class="resource-link" target="_blank">canva.com</a>
+                            <div class="resource-desc">Create professional guides and presentations</div>
+                        </div>
+                        <div class="resource-card">
+                            <div class="resource-name">Google Sites</div>
+                            <a href="https://sites.google.com" class="resource-link" target="_blank">sites.google.com</a>
+                            <div class="resource-desc">Free portfolio and landing pages</div>
+                        </div>
+                        <div class="resource-card">
+                            <div class="resource-name">Loom Video Recording</div>
+                            <a href="https://www.loom.com" class="resource-link" target="_blank">loom.com</a>
+                            <div class="resource-desc">Create course videos easily</div>
+                        </div>
+                        <div class="resource-card">
+                            <div class="resource-name">LinkedIn</div>
+                            <a href="https://www.linkedin.com" class="resource-link" target="_blank">linkedin.com</a>
+                            <div class="resource-desc">Build your professional presence</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="setup-section">
+                    <div class="setup-title">🌐 Additional Learning Platforms</div>
+                    <div class="resource-grid">
+                        <div class="resource-card">
+                            <div class="resource-name">DeepLearning.AI Catalog</div>
+                            <a href="https://www.deeplearning.ai/courses/" class="resource-link" target="_blank">All Courses</a>
+                            <div class="resource-desc">Many free short courses on AI topics</div>
+                        </div>
+                        <div class="resource-card">
+                            <div class="resource-name">Microsoft Learn AI</div>
+                            <a href="https://learn.microsoft.com/en-us/training/browse/?products=ai-services" class="resource-link" target="_blank">Training Browse</a>
+                            <div class="resource-desc">Free Microsoft AI certifications</div>
+                        </div>
+                        <div class="resource-card">
+                            <div class="resource-name">Google AI Courses</div>
+                            <a href="https://ai.google/education/" class="resource-link" target="_blank">Google AI Education</a>
+                            <div class="resource-desc">Free courses from Google</div>
+                        </div>
+                        <div class="resource-card">
+                            <div class="resource-name">Anthropic Documentation</div>
+                            <a href="https://docs.anthropic.com" class="resource-link" target="_blank">Claude Docs</a>
+                            <div class="resource-desc">Official Claude guides and API docs</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="highlight-box">
+                    <strong>💡 Pro Tip:</strong> Bookmark this page and the key resource links. Check off resources as you complete them. Most courses are 1-3 hours and can be done in one sitting.
+                </div>
+            </div>
+        </div>
+        
+        <div class="action-buttons">
+            <button class="btn btn-primary" onclick="saveProgress()">💾 Save Progress</button>
+            <button class="btn btn-secondary" onclick="resetProgress()">🔄 Reset All</button>
+            <button class="btn btn-secondary" onclick="exportProgress()">📊 Export Data</button>
+        </div>
+    </div>
+
+    <script>
+        const bootcampData = {
+            months: [
+                {
+                    id: 1,
+                    title: "Month 1: Foundation & Core Skills",
+                    goal: "Understand AI fundamentals and become dangerous with prompting and agents",
+                    weeks: [
+                        {
+                            title: "Week 1: AI Fundamentals & Prompt Engineering",
+                            hours: 5,
+                            resources: [
+                                { name: "DeepLearning.AI Prompt Course", url: "https://www.deeplearning.ai/short-courses/chatgpt-prompt-engineering-for-developers/" },
+                                { name: "Anthropic Prompt Guide", url: "https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering" },
+                                { name: "OpenAI Prompt Guide", url: "https://platform.openai.com/docs/guides/prompt-engineering" }
+                            ],
+                            tasks: [
+                                "Complete DeepLearning.AI ChatGPT Prompt Engineering course (1hr)",
+                                "Read Anthropic's Prompt Engineering Guide thoroughly",
+                                "Read OpenAI's Prompt Engineering Guide",
+                                "Create 10 specialized prompts for data governance work",
+                                "Document prompts in a template library"
+                            ],
+                            deliverable: "Your first AI toolkit - 10 prompts you'll actually use"
+                        },
+                        {
+                            title: "Week 2: Advanced Prompting & Agent Basics",
+                            hours: 5,
+                            resources: [
+                                { name: "Microsoft Copilot Studio", url: "https://copilotstudio.microsoft.com" },
+                                { name: "Copilot Studio Docs", url: "https://learn.microsoft.com/en-us/microsoft-copilot-studio" },
+                                { name: "Claude Projects Guide", url: "https://docs.anthropic.com" }
+                            ],
+                            tasks: [
+                                "Learn few-shot prompting techniques",
+                                "Practice chain-of-thought reasoning",
+                                "Experiment with Claude Projects for multi-turn workflows",
+                                "Study Microsoft Copilot Studio documentation",
+                                "Build Data Quality Assessment Bot agent",
+                                "Test agent with sample data schemas",
+                                "Document agent functionality and use cases"
+                            ],
+                            deliverable: "Working Data Quality Assessment Bot + documentation"
+                        },
+                        {
+                            title: "Week 3: AI for Data Governance",
+                            hours: 5,
+                            resources: [
+                                { name: "NIST AI RMF", url: "https://www.nist.gov/itl/ai-risk-management-framework" },
+                                { name: "EU AI Act Resources", url: "https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai" },
+                                { name: "ISO 42001 Overview", url: "https://www.iso.org/standard/81230.html" }
+                            ],
+                            tasks: [
+                                "Read NIST AI Risk Management Framework",
+                                "Study EU AI Act basics",
+                                "Review ISO 42001 AI Management System overview",
+                                "Design AI Governance Assessment Template structure",
+                                "Create risk categories for AI projects",
+                                "Build data quality requirements checklist",
+                                "Develop compliance considerations matrix"
+                            ],
+                            deliverable: "AI Governance Assessment Template (first consulting tool)"
+                        },
+                        {
+                            title: "Week 4: Real-World Application",
+                            hours: 5,
+                            resources: [
+                                { name: "LinkedIn", url: "https://www.linkedin.com" },
+                                { name: "Notion", url: "https://www.notion.so" },
+                                { name: "Google Sites", url: "https://sites.google.com" }
+                            ],
+                            tasks: [
+                                "Identify AI use case in your organization",
+                                "Research problem and potential solutions",
+                                "Draft mini-proposal with governance considerations",
+                                "Set up LinkedIn profile highlighting AI + governance",
+                                "Create portfolio hub (Notion or Google Site)",
+                                "Write first LinkedIn post about building your first agent",
+                                "Connect with 5 people in AI governance space"
+                            ],
+                            deliverable: "Online presence established with first post published"
+                        }
+                    ]
+                },
+                {
+                    id: 2,
+                    title: "Month 2: Technical Depth & Specialized Skills",
+                    goal: "Understand how AI actually works and build specialized expertise",
+                    weeks: [
+                        {
+                            title: "Week 5: How LLMs Actually Work",
+                            hours: 5,
+                            resources: [
+                                { name: "3Blue1Brown Neural Networks", url: "https://www.3blue1brown.com/lessons/neural-networks" },
+                                { name: "Andrej Karpathy LLM Intro", url: "https://www.youtube.com/watch?v=zjkBMFhNj_g" },
+                                { name: "The Illustrated Transformer", url: "https://jalammar.github.io/illustrated-transformer/" }
+                            ],
+                            tasks: [
+                                "Watch 3Blue1Brown neural network video series",
+                                "Watch Andrej Karpathy Intro to Large Language Models",
+                                "Read The Illustrated Transformer blog post",
+                                "Map technical concepts to governance needs",
+                                "Create AI Technical Terms Glossary for stakeholders",
+                                "Add 5 real-world examples to glossary"
+                            ],
+                            deliverable: "AI Technical Terms Glossary for Non-Technical Stakeholders"
+                        },
+                        {
+                            title: "Week 6: RAG, Fine-tuning & AI Architecture",
+                            hours: 5,
+                            resources: [
+                                { name: "Vector Databases Course", url: "https://www.deeplearning.ai/short-courses/building-applications-vector-databases/" },
+                                { name: "OpenAI Fine-tuning", url: "https://platform.openai.com/docs/guides/fine-tuning" },
+                                { name: "RAG Documentation", url: "https://docs.anthropic.com" }
+                            ],
+                            tasks: [
+                                "Complete DeepLearning.AI Vector Databases course",
+                                "Understand RAG use cases and limitations",
+                                "Read OpenAI fine-tuning documentation",
+                                "Learn cost/benefit analysis of fine-tuning",
+                                "Study common AI implementation patterns",
+                                "Create AI Architecture Decision Tree diagram",
+                                "Document when to use RAG vs base models vs fine-tuning"
+                            ],
+                            deliverable: "AI Architecture Decision Tree reference guide"
+                        },
+                        {
+                            title: "Week 7: AI Tool Landscape & Integration",
+                            hours: 5,
+                            resources: [
+                                { name: "Zapier", url: "https://zapier.com" },
+                                { name: "Make.com", url: "https://www.make.com" },
+                                { name: "n8n", url: "https://n8n.io" }
+                            ],
+                            tasks: [
+                                "Research top 20 AI tools by category",
+                                "Create tool comparison matrix for your niche",
+                                "Sign up for free trials of Zapier AI, Make.com, n8n",
+                                "Test 3 different AI tools",
+                                "Design multi-tool workflow (intake → analysis → report)",
+                                "Build working integration using free tiers",
+                                "Document workflow process and results"
+                            ],
+                            deliverable: "Working automated workflow demo"
+                        },
+                        {
+                            title: "Week 8: AI Governance Deep Dive",
+                            hours: 5,
+                            resources: [
+                                { name: "Microsoft AI Principles", url: "https://www.microsoft.com/en-us/ai/responsible-ai" },
+                                { name: "Google AI Principles", url: "https://ai.google/responsibility/principles/" },
+                                { name: "MIT AI Ethics", url: "https://ai.mit.edu" }
+                            ],
+                            tasks: [
+                                "Study published AI governance policies (Microsoft, Google, etc)",
+                                "Review MIT AI Ethics course materials",
+                                "Create AI Governance Policy Template for mid-size companies",
+                                "Build AI Risk Assessment Matrix",
+                                "Map common AI risks to data governance expertise",
+                                "Develop 5 risk scenarios with mitigation strategies"
+                            ],
+                            deliverable: "AI Risk Assessment Matrix (second consulting tool)"
+                        }
+                    ]
+                },
+                {
+                    id: 3,
+                    title: "Month 3: Building Your Business Assets",
+                    goal: "Create portfolio pieces and position yourself in the market",
+                    weeks: [
+                        {
+                            title: "Week 9: Content Creation & Thought Leadership",
+                            hours: 5,
+                            resources: [
+                                { name: "Canva", url: "https://www.canva.com" },
+                                { name: "LinkedIn", url: "https://www.linkedin.com" },
+                                { name: "Medium", url: "https://medium.com" }
+                            ],
+                            tasks: [
+                                "Outline AI Readiness Assessment Guide structure",
+                                "Research industry-specific AI challenges",
+                                "Write guide content (10-15 pages)",
+                                "Design guide layout in Canva",
+                                "Write 5 LinkedIn posts on different topics",
+                                "Schedule posts throughout the month",
+                                "Engage with 10 relevant posts in AI governance community"
+                            ],
+                            deliverable: "AI Readiness Assessment Guide + 5 scheduled LinkedIn posts"
+                        },
+                        {
+                            title: "Week 10: Build Your Signature Project",
+                            hours: 5,
+                            resources: [
+                                { name: "Claude.ai", url: "https://claude.ai" },
+                                { name: "Notion Templates", url: "https://www.notion.so/templates" },
+                                { name: "GitHub", url: "https://github.com" }
+                            ],
+                            tasks: [
+                                "Choose signature project (Governance Kit, Advanced Agent, or Playbook)",
+                                "Create detailed project outline",
+                                "Build core components (Day 1-3)",
+                                "Test and refine project (Day 4)",
+                                "Create professional documentation and presentation (Day 5)",
+                                "Prepare project for portfolio display"
+                            ],
+                            deliverable: "Your showcase piece (Governance Kit, Agent, or Playbook)"
+                        },
+                        {
+                            title: "Week 11: Course/Training Development",
+                            hours: 5,
+                            resources: [
+                                { name: "Loom", url: "https://www.loom.com" },
+                                { name: "Google Slides", url: "https://slides.google.com" },
+                                { name: "Canva Presentations", url: "https://www.canva.com" }
+                            ],
+                            tasks: [
+                                "Choose course topic and define target audience",
+                                "Outline 6 course modules with learning objectives",
+                                "Create content for Module 1 (slides or video)",
+                                "Design course materials in Canva",
+                                "Set up landing page on Google Sites or Notion",
+                                "Write course description and pricing strategy",
+                                "Test course flow with a colleague"
+                            ],
+                            deliverable: "First knowledge product with landing page"
+                        },
+                        {
+                            title: "Week 12: Market Testing & Next Steps",
+                            hours: 5,
+                            resources: [
+                                { name: "LinkedIn Groups", url: "https://www.linkedin.com" },
+                                { name: "Reddit AI Communities", url: "https://www.reddit.com/r/artificial/" },
+                                { name: "Discord AI Servers", url: "https://discord.com" }
+                            ],
+                            tasks: [
+                                "List 10 potential client companies",
+                                "Draft service offerings description",
+                                "Create one-page service overview",
+                                "Show portfolio to 3 trusted colleagues for feedback",
+                                "Join 2-3 AI professional communities",
+                                "Request feedback on positioning from community",
+                                "Review all deliverables from 12 weeks",
+                                "Create 90-day action plan for months 4-6"
+                            ],
+                            deliverable: "Your personalized roadmap forward"
+                        }
+                    ]
+                }
+            ]
+        };
+
+        let progress = {};
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(tabName).classList.add('active');
+        }
+
+        function initProgress() {
+            const saved = localStorage.getItem('bootcampProgress');
+            if (saved) {
+                progress = JSON.parse(saved);
+            } else {
+                bootcampData.months.forEach(month => {
+                    month.weeks.forEach((week, weekIndex) => {
+                        const weekId = `m${month.id}w${weekIndex}`;
+                        progress[weekId] = {
+                            tasks: Array(week.tasks.length).fill(false),
+                            deliverable: false,
+                            notes: ''
+                        };
+                    });
+                });
+            }
+        }
+
+        function renderBootcamp() {
+            const content = document.getElementById('trackerContent');
+            content.innerHTML = '';
+
+            bootcampData.months.forEach(month => {
+                const monthDiv = document.createElement('div');
+                monthDiv.className = 'month-section';
+                
+                const monthProgress = calculateMonthProgress(month.id);
+                
+                monthDiv.innerHTML = `
+                    <div class="month-header">
+                        <div>
+                            <div class="month-title">${month.title}</div>
+                            <div style="font-size: 13px; margin-top: 5px; opacity: 0.9;">${month.goal}</div>
+                        </div>
+                        <div class="month-progress">${monthProgress}% Complete</div>
+                    </div>
+                `;
+
+                month.weeks.forEach((week, weekIndex) => {
+                    const weekId = `m${month.id}w${weekIndex}`;
+                    const weekDiv = document.createElement('div');
+                    weekDiv.className = 'week-card';
+                    
+                    let resourcesHTML = '';
+                    if (week.resources && week.resources.length > 0) {
+                        resourcesHTML = '<div class="week-resources"><div class="week-resources-title">📚 Resources for this week</div>';
+                        week.resources.forEach(resource => {
+                            resourcesHTML += `<a href="${resource.url}" target="_blank">🔗 ${resource.name}</a>`;
+                        });
+                        resourcesHTML += '</div>';
+                    }
+                    
+                    let tasksHTML = '<ul class="task-list">';
+                    week.tasks.forEach((task, taskIndex) => {
+                        const isCompleted = progress[weekId].tasks[taskIndex];
+                        tasksHTML += `
+                            <li class="task-item ${isCompleted ? 'completed' : ''}" onclick="toggleTask('${weekId}', ${taskIndex})">
+                                <div class="task-checkbox"></div>
+                                <div class="task-text">${task}</div>
+                            </li>
+                        `;
+                    });
+                    tasksHTML += '</ul>';
+                    
+                    const deliverableChecked = progress[weekId].deliverable;
+                    
+                    weekDiv.innerHTML = `
+                        <div class="week-header">
+                            <div class="week-title">${week.title}</div>
+                            <div class="week-hours">${week.hours} hours</div>
+                        </div>
+                        ${resourcesHTML}
+                        ${tasksHTML}
+                        <div class="deliverable">
+                            <div class="deliverable-label">📦 Deliverable</div>
+                            <div class="deliverable-text">
+                                <label style="display: flex; align-items: center; cursor: pointer;">
+                                    <input type="checkbox" ${deliverableChecked ? 'checked' : ''} 
+                                           onchange="toggleDeliverable('${weekId}')" 
+                                           style="margin-right: 8px; width: 16px; height: 16px; cursor: pointer;">
+                                    ${week.deliverable}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="notes-section">
+                            <div class="notes-label">📝 Notes & Reflections</div>
+                            <textarea class="notes-input" 
+                                      placeholder="Add your notes, insights, or links here..."
+                                      onblur="saveNotes('${weekId}', this.value)">${progress[weekId].notes || ''}</textarea>
+                        </div>
+                    `;
+                    
+                    monthDiv.appendChild(weekDiv);
+                });
+
+                content.appendChild(monthDiv);
+            });
+
+            updateStats();
+        }
+
+        function toggleTask(weekId, taskIndex) {
+            progress[weekId].tasks[taskIndex] = !progress[weekId].tasks[taskIndex];
+            saveToLocalStorage();
+            renderBootcamp();
+        }
+
+        function toggleDeliverable(weekId) {
+            progress[weekId].deliverable = !progress[weekId].deliverable;
+            saveToLocalStorage();
+            updateStats();
+        }
+
+        function saveNotes(weekId, notes) {
+            progress[weekId].notes = notes;
+            saveToLocalStorage();
+        }
+
+        function calculateMonthProgress(monthId) {
+            const month = bootcampData.months.find(m => m.id === monthId);
+            let totalTasks = 0;
+            let completedTasks = 0;
+
+            month.weeks.forEach((week, weekIndex) => {
+                const weekId = `m${monthId}w${weekIndex}`;
+                totalTasks += week.tasks.length + 1;
+                completedTasks += progress[weekId].tasks.filter(t => t).length;
+                if (progress[weekId].deliverable) completedTasks++;
+            });
+
+            return Math.round((completedTasks / totalTasks) * 100);
+        }
+
+        function updateStats() {
+            let totalTasks = 0;
+            let completedTasks = 0;
+            let totalDeliverables = 0;
+            let completedDeliverables = 0;
+            let completedHours = 0;
+
+            bootcampData.months.forEach(month => {
+                month.weeks.forEach((week, weekIndex) => {
+                    const weekId = `m${month.id}w${weekIndex}`;
+                    totalTasks += week.tasks.length;
+                    completedTasks += progress[weekId].tasks.filter(t => t).length;
+                    totalDeliverables++;
+                    if (progress[weekId].deliverable) {
+                        completedDeliverables++;
+                        completedHours += week.hours;
+                    }
+                });
+            });
+
+            const overallProgress = Math.round((completedTasks / totalTasks) * 100);
+            
+            document.getElementById('totalProgress').textContent = overallProgress + '%';
+            document.getElementById('hoursCompleted').textContent = completedHours;
+            document.getElementById('tasksCompleted').textContent = `${completedTasks}/${totalTasks}`;
+            document.getElementById('deliverables').textContent = `${completedDeliverables}/${totalDeliverables}`;
+        }
+
+        function saveToLocalStorage() {
+            localStorage.setItem('bootcampProgress', JSON.stringify(progress));
+        }
+
+        function saveProgress() {
+            saveToLocalStorage();
+            alert('✅ Progress saved successfully!');
+        }
+
+        function resetProgress() {
+            if (confirm('Are you sure you want to reset all progress? This cannot be undone.')) {
+                localStorage.removeItem('bootcampProgress');
+                progress = {};
+                initProgress();
+                renderBootcamp();
+                alert('🔄 Progress has been reset.');
+            }
+        }
+
+        function exportProgress() {
+            const exportData = {
+                exportDate: new Date().toISOString(),
+                progress: progress,
+                summary: {
+                    totalProgress: document.getElementById('totalProgress').textContent,
+                    hoursCompleted: document.getElementById('hoursCompleted').textContent,
+                    tasksCompleted: document.getElementById('tasksCompleted').textContent,
+                    deliverables: document.getElementById('deliverables').textContent
+                }
+            };
+            
+            const dataStr = JSON.stringify(exportData, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `bootcamp-progress-${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+            URL.revokeObjectURL(url);
+        }
+
+        initProgress();
+        renderBootcamp();
+    </script>
+</body>
+</html>
